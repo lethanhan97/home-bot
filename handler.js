@@ -9,22 +9,25 @@ const api = axios.create({
   headers: { 'X-Custom-Header': 'foobar' },
 });
 
-const getUser = () => {
+const getUser = (currentDate) => {
   const startWeek = moment('2021-03-12').tz('Asia/Singapore');
-  const currentDate = moment().tz('Asia/Singapore');
 
   const difference = currentDate.diff(startWeek, 'w');
-  const userIndex = difference / 2;
+  const userIndex = (difference / 2) % 2;
 
   const users = ['@AnFromVietnam', '@ashleyteehee'];
 
   return users[userIndex];
 };
 
-const getMessage = () => {
-  const user = getUser();
-  const currentDate = moment().tz('Asia/Singapore');
-  const sundayDate = currentDate.add(2, 'd');
+const getMessage = (currentDate, sundayDate) => {
+  const user = getUser(currentDate);
+
+  if (!user) {
+    return `Hi, today is ${currentDate.format(
+      'MMMM Do YYYY'
+    )}. The time is ${currentDate.format('hh:mm:ss')}. Have a nice day!`;
+  }
 
   const message = `Hi ${user}, today is ${currentDate.format(
     'MMMM Do YYYY'
@@ -35,10 +38,13 @@ const getMessage = () => {
   return message;
 };
 
-module.exports.remind = async (event) => {
+const remind = async (event) => {
   const { chatId } = env;
 
-  const message = getMessage(currentDate);
+  const currentDate = moment().tz('Asia/Singapore');
+  const sundayDate = moment().tz('Asia/Singapore').add(2, 'd');
+
+  const message = getMessage(currentDate, sundayDate);
   return api
     .get('/sendMessage', {
       params: {
@@ -60,4 +66,9 @@ module.exports.remind = async (event) => {
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
   // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+};
+
+module.exports = {
+  getMessage,
+  remind,
 };
