@@ -1,0 +1,17 @@
+service: house-bot
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: ap-southeast-1
+
+functions:
+  remind:
+    handler: handler.remind
+    events:
+      - httpApi:
+          path: /remind
+          method: get
+      # - schedule: rate(10 minutes)
