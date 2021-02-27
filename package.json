@@ -23,5 +23,9 @@
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.1.0",
     "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "moment-timezone": "^0.5.33"
   }
 }
