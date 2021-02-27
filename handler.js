@@ -30,17 +30,27 @@ const getMessage = () => {
 };
 
 module.exports.remind = async (event) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
+  const { chatId } = env;
+
+  const message = getMessage(currentDate);
+  return api
+    .get('/sendMessage', {
+      params: {
+        chat_id: chatId,
+        text: message,
+        parse_mode: 'html',
       },
-      null,
-      2
-    ),
-  };
+    })
+    .then(() => ({
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `${message}`,
+      }),
+    }))
+    .catch((e) => ({
+      statusCode: 500,
+      body: JSON.stringify(e),
+    }));
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
   // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
