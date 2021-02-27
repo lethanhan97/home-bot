@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint --fix",
     "format": "prettier --config .prettierrc '*.js' --write",
-    "test": "jest"
+    "test": "jest",
+    "deploy": "npm run test && serverless deploy"
   },
   "repository": {
     "type": "git",
