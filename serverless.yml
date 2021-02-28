@@ -14,4 +14,4 @@ functions:
       - httpApi:
           path: /remind
           method: get
-      - schedule: rate(14 days)
+      - schedule: cron(0 13 ? * 6 *) # every mon, wed, fri, sun
