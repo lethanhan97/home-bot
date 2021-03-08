@@ -134,3 +134,13 @@ test('Return cleaning message for Nhim on 2021-07-16', () => {
     )}`
   );
 });
+
+// Non days
+test('Return cleaning message for nobody on 2021-03-19', () => {
+  const currentDate = moment('2021-03-19').tz('Asia/Singapore');
+  const sundayDate = moment('2021-03-19').tz('Asia/Singapore').add(2, 'd');
+
+  expect(getMessage(currentDate, sundayDate)).toBe(
+    `Hi, today is March 19th 2021. The time is 12:00:00. Have a nice day!`
+  );
+});
