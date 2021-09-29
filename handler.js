@@ -10,12 +10,12 @@ const api = axios.create({
 });
 
 const getUser = (currentDate) => {
-  const startWeek = moment('2021-03-12').tz('Asia/Singapore');
+  const startWeek = moment('2021-10-01').tz('Asia/Singapore');
 
-  const difference = currentDate.diff(startWeek, 'w');
-  const userIndex = (difference / 2) % 2;
+  const differenceInWeek = currentDate.diff(startWeek, 'w');
+  const userIndex = differenceInWeek % 2;
 
-  const users = ['@AnFromVietnam', '@ashleyteehee'];
+  const users = ['@ashleyteehee', '@AnFromVietnam'];
 
   return users[userIndex];
 };
