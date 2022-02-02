@@ -1,6 +1,6 @@
 'use strict';
 const axios = require('axios');
-const moment = require('moment-timezone');
+const { getCurrentDate, getStartWeek } = require('./date');
 const env = require('./env.json');
 
 const api = axios.create({
@@ -10,7 +10,7 @@ const api = axios.create({
 });
 
 const getUser = (currentDate) => {
-  const startWeek = moment('2021-10-01').tz('Asia/Singapore');
+  const startWeek = getStartWeek();
 
   const differenceInWeek = currentDate.diff(startWeek, 'w');
   const userIndex = differenceInWeek % 2;
@@ -38,11 +38,11 @@ const getMessage = (currentDate, sundayDate) => {
   return message;
 };
 
-const remind = async (event) => {
+const remind = async () => {
   const { chatId } = env;
 
-  const currentDate = moment().tz('Asia/Singapore');
-  const sundayDate = moment().tz('Asia/Singapore').add(2, 'd');
+  const currentDate = getCurrentDate();
+  const sundayDate = currentDate.add(2, 'd');
 
   const message = getMessage(currentDate, sundayDate);
   return api
