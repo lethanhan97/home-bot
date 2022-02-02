@@ -1,6 +1,6 @@
 'use strict';
 const axios = require('axios');
-const { getCurrentDate, getStartWeek } = require('./date');
+const date = require('./date');
 const env = require('./env.json');
 
 const api = axios.create({
@@ -9,8 +9,9 @@ const api = axios.create({
   headers: { 'X-Custom-Header': 'foobar' },
 });
 
-const getUser = (currentDate) => {
-  const startWeek = getStartWeek();
+const getUser = () => {
+  const currentDate = date.getCurrentDate();
+  const startWeek = date.getStartWeek();
 
   const differenceInWeek = currentDate.diff(startWeek, 'w');
   const userIndex = differenceInWeek % 2;
@@ -20,8 +21,10 @@ const getUser = (currentDate) => {
   return users[userIndex];
 };
 
-const getMessage = (currentDate, sundayDate) => {
-  const user = getUser(currentDate);
+const getMessage = () => {
+  const currentDate = date.getCurrentDate();
+  const twoDaysLaterDate = date.getCurrentDate().add(2, 'd');
+  const user = getUser();
 
   if (!user) {
     return `Hi, today is ${currentDate.format(
@@ -31,7 +34,7 @@ const getMessage = (currentDate, sundayDate) => {
 
   const message = `Hi ${user}, today is ${currentDate.format(
     'MMMM Do YYYY'
-  )} and it is your turn to clean! Remember to clean the toilet, living room as well as your room by ${sundayDate.format(
+  )} and it is your turn to clean! Remember to clean the toilet, living room as well as your room by ${twoDaysLaterDate.format(
     'MMMM Do YYYY'
   )}`;
 
@@ -41,10 +44,8 @@ const getMessage = (currentDate, sundayDate) => {
 const remind = async () => {
   const { chatId } = env;
 
-  const currentDate = getCurrentDate();
-  const sundayDate = currentDate.add(2, 'd');
+  const message = getMessage();
 
-  const message = getMessage(currentDate, sundayDate);
   return api
     .get('/sendMessage', {
       params: {
@@ -69,6 +70,7 @@ const remind = async () => {
 };
 
 module.exports = {
+  getUser,
   getMessage,
   remind,
 };
